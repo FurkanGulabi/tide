@@ -38,9 +38,11 @@ model User {
 }
 
 model Post {
-  id       String @id @default(cuid())
-  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId String
+  id          String  @id @default(cuid())
+  author      User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  image       String
+  description String?
 
   likes    Like[]
   comments Comment[]

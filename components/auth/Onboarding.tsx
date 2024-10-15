@@ -22,6 +22,7 @@ import {
 import { completeOnboarding } from "@/actions/auth/Auth";
 import { useRouter } from "next/navigation";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import checkUsernameAvailable from "@/lib/auth/checkUsername";
 
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;
 
@@ -57,6 +58,7 @@ const OnboardingPageComponent = () => {
   });
 
   const onSubmit = async (values: OnboardingFormData) => {
+    form.clearErrors();
     setLoading(true);
     try {
       const data = await completeOnboarding(values);
@@ -117,7 +119,7 @@ const OnboardingPageComponent = () => {
                         placeholder="John"
                         type="text"
                         required
-                        disabled={loading}
+                        disabled={loading || form.formState.isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -137,7 +139,7 @@ const OnboardingPageComponent = () => {
                         placeholder="Doe"
                         type="text"
                         required
-                        disabled={loading}
+                        disabled={loading || form.formState.isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -158,7 +160,7 @@ const OnboardingPageComponent = () => {
                       placeholder="johndoe123"
                       type="text"
                       required
-                      disabled={loading}
+                      disabled={loading || form.formState.isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -170,9 +172,13 @@ const OnboardingPageComponent = () => {
             <Button
               type="submit"
               className="w-full flex flex-row gap-2"
-              disabled={loading}
+              disabled={loading || form.formState.isSubmitting}
             >
-              {loading ? <LoadingSpinner size="md" /> : <FaUserPlus />}
+              {loading || form.formState.isSubmitting ? (
+                <LoadingSpinner size="md" />
+              ) : (
+                <FaUserPlus />
+              )}
               <span>Complete onboarding</span>
             </Button>
           </motion.div>

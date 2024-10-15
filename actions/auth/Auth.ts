@@ -7,7 +7,7 @@ import prisma from "@/lib/db";
 import { AuthSchema, onboardingSchema } from "@/schemas/AuthSchema";
 
 async function signInEmail(values: FormData) {
-  const validatedFields = AuthSchema.safeParse(values);
+  const validatedFields = await AuthSchema.safeParseAsync(values);
   if (!validatedFields.success) {
     return { error: "Invalid Email" };
   }
@@ -33,7 +33,7 @@ async function completeOnboarding(values: OnboardingFormData) {
   if (!session) {
     return { error: "Unauthorized" };
   }
-  const validatedFields = onboardingSchema.safeParse(values);
+  const validatedFields = await onboardingSchema.safeParseAsync(values);
   if (!validatedFields.success) {
     throw new Error("Invalid fields");
   }

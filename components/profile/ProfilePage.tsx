@@ -1,21 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BookmarkIcon,
   Grid3X3Icon,
-  HeartIcon,
-  MessageCircleIcon,
   MoreHorizontalIcon,
-  PlaySquareIcon,
-  PlusCircleIcon,
-  SettingsIcon,
   UserPlusIcon,
 } from "lucide-react";
-import Image from "next/image";
 import PostsContainer from "./PostsContainer";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import EditProfileButton from "./EditProfileButton";
+import NoSavedPostError from "./NoSavedPostError";
+import { PostType } from "@/types/PostType";
 
 interface ProfilePageComponentProps {
   username: string;
@@ -26,7 +21,7 @@ interface ProfilePageComponentProps {
   postCount: number;
   followerCount: number;
   followingCount: number;
-  posts: any[];
+  posts: PostType[];
   isPrivate: boolean;
   isOwner: boolean;
 }
@@ -97,10 +92,15 @@ export default function ProfilePageComponent({
             <Grid3X3Icon className="h-4 w-4" />
             <span className="hidden sm:inline">Posts</span>
           </TabsTrigger>
-          <TabsTrigger value="saved" className="flex items-center w-full gap-2">
-            <BookmarkIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">Saved</span>
-          </TabsTrigger>
+          {isOwner && (
+            <TabsTrigger
+              value="saved"
+              className="flex items-center w-full gap-2"
+            >
+              <BookmarkIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Saved</span>
+            </TabsTrigger>
+          )}
         </TabsList>
         <TabsContent value="posts" className="mt-6">
           <PostsContainer
@@ -109,9 +109,9 @@ export default function ProfilePageComponent({
             isPrivate={isPrivate}
           />
         </TabsContent>
-        <TabsContent value="reels">Reels content</TabsContent>
-        <TabsContent value="saved">Saved content</TabsContent>
-        <TabsContent value="tagged">Tagged content</TabsContent>
+        <TabsContent value="saved">
+          <NoSavedPostError />{" "}
+        </TabsContent>
       </Tabs>
     </div>
   );

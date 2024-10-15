@@ -1,3 +1,4 @@
+import checkUsernameAvailable from "@/lib/auth/checkUsername";
 import { z } from "zod";
 
 const AuthSchema = z.object({
@@ -30,7 +31,16 @@ const onboardingSchema = z.object({
     .regex(/^[a-zA-Z0-9]+$/, {
       message: "Username must contain only letters and numbers",
     })
-    .trim(),
+    .trim()
+    .superRefine(async (val, ctx) => {
+      const isAvailable = await checkUsernameAvailable(val);
+      if (!isAvailable) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Username is already taken",
+        });
+      }
+    }),
 });
 
 export { AuthSchema, onboardingSchema };
